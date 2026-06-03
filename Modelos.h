@@ -3,6 +3,26 @@
 #define MODELOS_H
 
 #include <ctime> // para time_t
+#include "Constantes.h"
+
+struct Telefono{
+    OpTelfMovil prefijo;
+    unsigned int numero;
+};
+
+struct Cedula{
+    TipoIdentificacion tipIdent;
+    long numero;
+};
+
+
+struct Cliente {
+    int id;
+    Cedula cedula;
+    char nombre[64];
+    Telefono telefono;
+    time_t borrado_en;
+};
 
 struct Repartidor {
     int id;
@@ -17,5 +37,6 @@ struct Sector {
     int id;
     char nombre[32];
     time_t borrado_en;
-}
+};
+
 #endif
