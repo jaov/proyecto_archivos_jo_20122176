@@ -6,12 +6,12 @@
 #include "../validadores/Validadores.h"
 #include <vector>
 
-class ServicioCliente {
+class GestorCliente {
 private:
     DaoArchivo<Cliente> dao;
 
 public:
-    ServicioCliente() : dao("clientes.dat") {}
+    GestorCliente() : dao("clientes.dat") {}
 
     int registrar(Cliente& c) {
         if (!Validadores::esCedulaValida(c.cedula) || !Validadores::esTelefonoValido(c.telefono)) {
