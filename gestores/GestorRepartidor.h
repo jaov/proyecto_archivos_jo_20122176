@@ -60,6 +60,11 @@ public:
         return resultados;
     }
 
+    bool estaDisponible(const int id_repartidor) {
+        Repartidor encontrado =  dao.encontrarPorId(id_repartidor);
+        return encontrado.disponible && encontrado.borrado_en==static_cast<time_t>(0);
+    }
+
     void eliminar(int id) {
         dao.eliminar(id);
     }
