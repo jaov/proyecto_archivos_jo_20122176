@@ -46,4 +46,14 @@ struct Sector {
     time_t borrado_en;
 };
 
+struct Entrega {
+    int id;
+    Cedula cedula_cliente;
+    int id_sector_origen;
+    int id_sector_destino;
+    int id_repartidor; // -1 pendiente por asignar.
+    bool finalizada;
+    time_t borrado_en;
+};
+
 #endif
