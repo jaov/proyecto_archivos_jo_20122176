@@ -13,6 +13,10 @@ private:
 public:
     GestorRepartidor() : dao("repartidores.dat") {}
 
+    Repartidor buscarPorId(int id) {
+        return dao.encontrarPorId(id);
+    }
+
     int registrar(Repartidor& r) {
         if (!Validadores::esVehiculoValido(r.vehiculo)) {
             return -1;
