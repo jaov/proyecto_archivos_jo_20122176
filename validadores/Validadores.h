@@ -2,6 +2,8 @@
 #define VALIDADORES_H
 
 #include "../Modelos.h"
+#include "string"
+#include "cstring"
 
 class Validadores {
 public:
@@ -19,6 +21,20 @@ public:
 
     static bool esCedulaValida(const Cedula& c) {
         return c.numero > 0; //Varia demasiado entre tipos;
+    }
+
+    static bool esPlacaValida(const char* placa) {
+        if (std::strlen(placa) != 6) return false;
+        
+        for (int i = 0; i < 6; ++i) {
+            // placa solo puede ser alfanumerica
+            if (!std::isalnum(static_cast<unsigned char>(placa[i]))) return false;
+        }
+        return true;
+    }
+
+    static bool esVehiculoValido(const Vehiculo& v) {
+        return esPlacaValida(v.placa) && (v.tipo == TipoVehiculo::CARRO || v.tipo == TipoVehiculo::MOTO);
     }
 };
 
