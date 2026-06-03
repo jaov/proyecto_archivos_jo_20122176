@@ -56,7 +56,7 @@ class DaoArchivo {
     
     
     // para el offset se usa offsetof(T, campo)
-     int actualizarCampo(int id, size_t offset, const C& nuevoValor) {
+     int actualizarCampo(const int id, const size_t offset, const C& nuevoValor) {
 	 std::fstream file(nombreArchivo, std::ios::binary | std::ios::in |
 		 std::ios::out);
 
@@ -111,7 +111,7 @@ class DaoArchivo {
     }
 
     // LISTAR POR STRING
-    std::vector<T> listarPorString(size_t offset, const char* valorBuscado, size_t bufferSize) {
+    std::vector<T> listarPorString(const size_t offset, const char* valorBuscado, const size_t bufferSize) {
         std::vector<T> resultados;
         std::ifstream file(nombreArchivo, std::ios::binary);
         if(!file.is_open()) return resultados;
@@ -139,7 +139,7 @@ class DaoArchivo {
         return resultados;
     }
 
-    int eliminar(int id) {
+    int eliminar(const int id) {
 	time_t ahora = std::time(nullptr);
 	actualizarCampo(id, offsetof(T, borrado_en), ahora);
 	return 0;
