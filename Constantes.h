@@ -18,4 +18,9 @@ enum class TipoIdentificacion: char {
     JURIDICA = 'J'
 };
 
+enum TipoVehiculo {
+    MOTO,
+    CARRO
+};
+
 #endif
