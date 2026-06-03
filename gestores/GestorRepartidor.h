@@ -40,6 +40,18 @@ public:
 	return disponibles;
     }
 
+    std::vector<Repartidor> listarDisponiblesEnZona(int id_sector) {
+        std::vector<Repartidor> resultados;
+        std::vector<Repartidor> repartidoresEnZona = dao.listarPorCampo(offsetof(Repartidor,id_sector), id_sector);
+
+        for (const auto& r : repartidoresEnZona) {
+            if(r.disponible == true && r.borrado_en == static_cast<time_t>(0)) {
+                resultados.push_back(r);
+            }
+        }
+        return resultados;
+    }
+
     void eliminar(int id) {
         dao.eliminar(id);
     }
