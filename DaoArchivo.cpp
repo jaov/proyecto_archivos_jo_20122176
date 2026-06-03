@@ -1,6 +1,10 @@
 #include <vector>
 #include <type_traits>
 #include <cstddef>
+#include <fstream>
+#include <ctime>
+#include <cstring>
+#include <string>
 
 template <typename T>
 class DaoArchivo {
