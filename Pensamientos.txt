@@ -1,0 +1,21 @@
+"How does a relational database implement SELECT author FROM books? In a 
+relational database, every row in a table (e.g. the books table) is exactly 
+the same length in bytes, and every fields is always at a fixed offset from 
+the beginning of the row. So, for example, if each record in the books table 
+is 100 bytes long, and the author field is at offset 23, then there are authors 
+stored at byte 23, 123, 223, 323, etc. 
+
+What is the code to move to the next record in the result of this query? Basically, it’s this:
+
+pointer += 100;
+
+One CPU instruction. Faaaaaaaaaast."
+Joel Spolsky - https://www.joelonsoftware.com/2001/12/11/back-to-basics/
+
+Para la capa de persistencia me inspiré en Joel Spolsky, una de mis grandes influencias de programador.
+
+Se va a guardar en archivos .dat con campos de tamaño fijo, así que no se va a usar std::string y se optará por arrays de char
+
+Para metodos que solo hacen efectos secundarios retornar 0 es bien y retornar >0 se usa para errores
+
+
