@@ -81,33 +81,33 @@ class DaoArchivo {
 
      // no funciona con char[] por el comparador ==
     template <typename C>
-    std::vector<T> listarPorCampo(size_t offset, const C& valorBuscado) {
-	std::vector<T> resultados;
-	std::ifstream file(nombreArchivo, std::ios::binary);
-	if(!file.is_open()) return resultados;
+    std::vector<T> listarPorCampo(const size_t offset, const C& valorBuscado) {
+		std::vector<T> resultados;
+		std::ifstream file(nombreArchivo, std::ios::binary);
+		if(!file.is_open()) return resultados;
 
-	file.seekg(0, std::ios::end);
-	size_t numRecords = file.tellg() / sizeof(T);
+		file.seekg(0, std::ios::end);
+		const size_t numRecords = file.tellg() / sizeof(T);
 
-	for(size_t i = 0; i<numRecords; ++i) {
-	    C valorCampo;
+		for(size_t i = 0; i<numRecords; ++i) {
+		    C valorCampo;
 
-	    // Ir al campo directamente
-	    file.seekg((i*sizeof(T)) + offset);
-	    file.read(reinterpret_cast<char*>(&valorCampo), sizeof(C));
+		    // Ir al campo directamente
+		    file.seekg((i*sizeof(T)) + offset);
+		    file.read(reinterpret_cast<char*>(&valorCampo), sizeof(C));
 
-	    if(valorCampo == valorBuscado) {
-		file.seekg(i*sizeof(T));
-		T item;
-		file.read(reinterpret_cast<char*>(&item), sizeof(T));
+		    if(valorCampo == valorBuscado) {
+				file.seekg(i*sizeof(T));
+				T item;
+				file.read(reinterpret_cast<char*>(&item), sizeof(T));
 
-		if(item.borrado_en == 0) {
-		    resultados.push_back(item);
+				if(item.borrado_en == 0) {
+				    resultados.push_back(item);
+				}
+			}
 		}
-	    }
-	}
 
-	return resultados;
+		return resultados;
     }
 
     // LISTAR POR STRING
