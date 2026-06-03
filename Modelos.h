@@ -10,6 +10,12 @@ struct Telefono{
     unsigned int numero;
 };
 
+struct Vehiculo{
+    TipoVehiculo tipo;
+    char modelo[50];
+    char placa[7];
+};
+
 struct Cedula{
     TipoIdentificacion tipIdent;
     long numero;
@@ -29,6 +35,7 @@ struct Repartidor {
     char usuario[32];
     char contrasena[32];
     int id_sector; // llave foranea
+    Vehiculo vehiculo;
     bool disponible;
     time_t borrado_en;
 };
