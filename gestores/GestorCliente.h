@@ -1,5 +1,5 @@
-#ifndef SERVICIO_CLIENTE_H
-#define SERVICIO_CLIENTE_H
+#ifndef GESTOR_CLIENTE_H
+#define GESTOR_CLIENTE_H
 
 #include "../DaoArchivo.cpp"
 #include "../Modelos.h"
