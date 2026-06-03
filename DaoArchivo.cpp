@@ -1,3 +1,6 @@
+#ifndef DAO_ARCHIVO_CPP
+#define DAO_ARCHIVO_CPP
+
 #include <vector>
 #include <type_traits>
 #include <cstddef>
@@ -142,3 +145,5 @@ class DaoArchivo {
 	return 0;
     }
 };
+
+#endif
