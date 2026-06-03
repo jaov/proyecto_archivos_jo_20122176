@@ -13,6 +13,9 @@ public:
     GestorRepartidor() : dao("repartidores.dat") {}
 
     int registrar(Repartidor& r) {
+        if (!Validadores::esVehiculoValido(r.vehiculo)) {
+            return -1;
+        }
         return dao.crear(r);
     }
 
