@@ -52,7 +52,7 @@ struct Entrega {
     int id_sector_origen;
     int id_sector_destino;
     int id_repartidor; // -1 pendiente por asignar.
-    bool finalizada;
+    EstatusEntrega estatus;
     time_t borrado_en;
 };
 

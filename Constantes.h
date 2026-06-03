@@ -18,6 +18,13 @@ enum class TipoIdentificacion: char {
     JURIDICA = 'J'
 };
 
+enum class EstatusEntrega : int {
+    REPARTIDOR_PENDIENTE = 0,
+    REPARTIDOR_ASIGNADO = 1,
+    ENTREGADA = 2,
+    CANCELADO = 3
+};
+
 enum TipoVehiculo {
     MOTO,
     CARRO
