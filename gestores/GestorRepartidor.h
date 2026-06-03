@@ -25,7 +25,7 @@ public:
     }
 
     std::vector<Repartidor> listarActivos() {
-        return dao.listarPorCampo(offsetof(Repartidor, borrado_en), (time_t)0);
+        return dao.listarPorCampo(offsetof(Repartidor, borrado_en), static_cast<time_t>(0));
     }
 
     std::vector<Repartidor> listarDisponibles() {
