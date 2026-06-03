@@ -18,4 +18,4 @@ Se va a guardar en archivos .dat con campos de tamaño fijo, así que no se va a
 
 Para metodos que solo hacen efectos secundarios retornar 0 es bien y retornar >0 se usa para errores
 
-
+Se manejarán borrados suaves (soft deletes), para no mover el indice de los archivos binarios
