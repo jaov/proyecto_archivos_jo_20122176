@@ -3,6 +3,7 @@
 
 #include "../DaoArchivo.cpp"
 #include "../Modelos.h"
+#include "../validadores/Validadores.h"
 #include <vector>
 
 class GestorRepartidor {
