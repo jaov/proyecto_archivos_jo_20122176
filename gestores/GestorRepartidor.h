@@ -29,8 +29,8 @@ public:
     }
 
     std::vector<Repartidor> listarDisponibles() {
-	std::vector<Repartidos> todosActivos = listarActivos();
-	std::vector<Repartidos> disponibles;
+	std::vector<Repartidor> todosActivos = listarActivos();
+	std::vector<Repartidor> disponibles;
 
 	for (const auto& r : todosActivos) {
 	    if(r.disponible == true) {
