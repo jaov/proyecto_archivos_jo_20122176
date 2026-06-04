@@ -88,7 +88,7 @@ private:
             std::cout << "3. Sectores" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
-                std::cin.clear(); std::cin.ignore(1000, '\n'); 
+                std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
                 std::cout << "Entrada inválida." << std::endl; opcion = -1;
                 continue;
             }
@@ -112,7 +112,7 @@ private:
             std::cout << "3. Eliminar" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
-                std::cin.clear(); std::cin.ignore(1000, '\n'); 
+                std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
                 std::cout << "Entrada inválida." << std::endl; opcion = -1;
                 continue;
             }
@@ -125,45 +125,26 @@ private:
         } while (opcion != 0);
     }
 
-    // Template method for paginated selection
-    template <typename T>
-    int seleccionarElemento(const std::vector<T>& items) {
-        if (items.empty()) {
-            std::cout << "No hay elementos disponibles." << std::endl;
-            return -1;
+    void listarClientes() {
+        std::vector<Cliente> clientes = gc.listarActivos();
+        if (clientes.empty()) {
+            std::cout << "No hay clientes registrados." << std::endl;
+            return;
         }
-
-        int page = 0;
-        const int pageSize = 9;
-        
-        while (true) {
-            size_t start = page * pageSize;
-            size_t end = std::min(start + pageSize, items.size());
-            
-            std::cout << "\n--- Seleccione (1-" << (end - start) << "), [A]nt, [S]ig, [0] Salir ---" << std::endl;
-            for (size_t i = start; i < end; ++i) {
-                std::cout << (i - start + 1) << ". " << items[i].nombre << std::endl;
-            }
-
-            char opcion;
-            std::cin >> opcion;
-            
-            if (opcion == '0') return -1;
-            if (opcion == 'A' || opcion == 'a') { if (page > 0) page--; }
-            else if (opcion == 'S' || opcion == 's') { if (end < items.size()) page++; }
-            else if (opcion >= '1' && opcion <= '9') {
-                int index = (opcion - '1');
-                if (index >= 0 && index < (int)(end - start)) {
-                    return items[start + index].id;
-                }
-            }
-            std::cout << "Opción inválida." << std::endl;
+        std::cout << "\n--- Clientes ---" << std::endl;
+        for (const auto& c : clientes) {
+            std::cout << "ID: " << c.id 
+                      << " | Cedula: " << (char)c.cedula.tipIdent << "-" 
+                      << std::setfill('0') << std::setw(8) << c.cedula.numero 
+                      << " | Nombre: " << c.nombre << std::endl;
         }
     }
 
     void eliminarCliente() {
-        int id; std::cout << "ID a eliminar: "; std::cin >> id;
-        gc.eliminar(id);
+        int id = seleccionarElemento(gc.listarActivos(), [](const Cliente& c) {
+            std::cout << "Nombre: " << c.nombre;
+        });
+        if (id != -1) gc.eliminar(id);
     }
 
     void mostrarSubmenuRepartidores() {
@@ -175,7 +156,7 @@ private:
             std::cout << "3. Eliminar" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
-                std::cin.clear(); std::cin.ignore(1000, '\n'); 
+                std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
                 std::cout << "Entrada inválida." << std::endl; opcion = -1;
                 continue;
             }
@@ -217,8 +198,10 @@ private:
         }
     }
     void eliminarRepartidor() {
-        int id; std::cout << "ID a eliminar: "; std::cin >> id;
-        gr.eliminar(id);
+        int id = seleccionarElemento(gr.listarActivos(), [](const Repartidor& r) {
+            std::cout << "Nombre: " << r.nombre;
+        });
+        if (id != -1) gr.eliminar(id);
     }
 
     void mostrarSubmenuSectores() {
@@ -260,8 +243,10 @@ private:
         }
     }
     void eliminarSector() {
-        int id; std::cout << "ID a eliminar: "; std::cin >> id;
-        gs.eliminar(id);
+        int id = seleccionarElemento(gs.listarActivos(), [](const Sector& s) {
+            std::cout << "Nombre: " << s.nombre;
+        });
+        if (id != -1) gs.eliminar(id);
     }
 
 
@@ -301,8 +286,22 @@ private:
         std::vector<Entrega> lista = soloPendientes ? ge.listarPorEstatus(EstatusEntrega::REPARTIDOR_PENDIENTE) : ge.listarTodo();
         std::cout << "\n--- Envíos ---" << std::endl;
         for (const auto& e : lista) {
-            std::cout << "ID: " << e.id << " | Cliente: " << e.cedula_cliente.numero 
-                      << " | Estatus: " << (int)e.estatus << std::endl;
+            Cliente c = gc.buscarPorCedula(e.cedula_cliente);
+            Sector sO = gs.buscarPorId(e.id_sector_origen);
+            Sector sD = gs.buscarPorId(e.id_sector_destino);
+            
+            std::cout << "ID: " << e.id 
+                      << " | Cliente: " << c.nombre 
+                      << " | Origen: " << sO.nombre 
+                      << " | Destino: " << sD.nombre;
+            
+            if (e.id_repartidor != -1) {
+                Repartidor r = gr.buscarPorId(e.id_repartidor);
+                std::cout << " | Repartidor: " << r.nombre;
+            } else {
+                std::cout << " | Repartidor: [PENDIENTE]";
+            }
+            std::cout << " | Estatus: " << (int)e.estatus << std::endl;
         }
     }
 
@@ -313,28 +312,36 @@ private:
     }
 
     void solicitarEnvio() {
-        std::cout << "Cedula Cliente (Tipo [V,E,G,C,J] número): ";
-        char tipo; long num;
-        if (!(std::cin >> tipo >> num)) {
-            std::cin.clear(); std::cin.ignore(1000, '\n');
-            std::cout << "Entrada inválida." << std::endl; return;
-        }
-        int id_c = gc.encontrarIdPorCedula(static_cast<TipoIdentificacion>(tipo), num);
-        if (id_c < 0) { mostrarError(id_c); return; }
+        std::cout << "\n--- Seleccionar Cliente ---" << std::endl;
+        int id_c = seleccionarElemento(gc.listarActivos(), [](const Cliente& c) {
+            std::cout << "Nombre: " << c.nombre << " | Cedula: " << c.cedula.numero;
+        });
+        if (id_c < 0) return;
+        Cliente c = gc.buscarPorId(id_c);
 
-        std::cout << "Nombre Sector Origen: ";
-        char nomOrigen[32]; std::cin.ignore(); std::cin.getline(nomOrigen, 32);
-        int id_origen = gs.encontrarIdPorNombre(nomOrigen);
-        if (id_origen < 0) { mostrarError(id_origen); return; }
+        std::cout << "\n--- Seleccionar Sector Origen ---" << std::endl;
+        int id_origen = seleccionarElemento(gs.listarActivos(), [](const Sector& s) {
+            std::cout << "Nombre: " << s.nombre;
+        });
+        if (id_origen < 0) return;
 
-        std::cout << "Nombre Sector Destino: ";
-        char nomDestino[32]; std::cin.getline(nomDestino, 32);
-        int id_destino = gs.encontrarIdPorNombre(nomDestino);
-        if (id_destino < 0) { mostrarError(id_destino); return; }
+        std::cout << "\n--- Seleccionar Sector Destino ---" << std::endl;
+        int id_destino = seleccionarElemento(gs.listarActivos(), [](const Sector& s) {
+            std::cout << "Nombre: " << s.nombre;
+        });
+        if (id_destino < 0) return;
 
         std::vector<Repartidor> disponibles = gr.listarDisponiblesEnZona(id_origen);
         
-        Entrega e; e.cedula_cliente = {static_cast<TipoIdentificacion>(tipo), num}; e.id_sector_origen = id_origen; e.id_sector_destino = id_destino; e.estatus = EstatusEntrega::REPARTIDOR_PENDIENTE; e.id_repartidor = -1; e.borrado_en = 0; int id_e = ge.solicitarEnvio(e);
+        Entrega e; 
+        e.cedula_cliente = c.cedula; 
+        e.id_sector_origen = id_origen; 
+        e.id_sector_destino = id_destino; 
+        e.estatus = EstatusEntrega::REPARTIDOR_PENDIENTE; 
+        e.id_repartidor = -1; 
+        e.borrado_en = 0; 
+        
+        int id_e = ge.solicitarEnvio(e);
         if (id_e < 0) { mostrarError(id_e); return; }
         std::cout << "Envío solicitado con ID: " << id_e << std::endl;
 
@@ -343,18 +350,10 @@ private:
             return;
         }
 
-        std::cout << "Repartidores disponibles en " << nomOrigen << ":" << std::endl;
-        for (const auto& r : disponibles) {
-            std::cout << "- ID: " << r.id << " | Nombre: " << r.nombre 
-                      << " | Vehiculo: " << r.vehiculo.modelo << std::endl;
-        }
-
-        std::cout << "Seleccione ID de repartidor (o -1 para asignar después): ";
-        int id_r; 
-        if (!(std::cin >> id_r)) {
-            std::cin.clear(); std::cin.ignore(1000, '\n');
-            std::cout << "Entrada inválida." << std::endl; return;
-        }
+        std::cout << "Repartidores disponibles en el sector origen:" << std::endl;
+        int id_r = seleccionarElemento(disponibles, [](const Repartidor& r) {
+            std::cout << "Nombre: " << r.nombre << " | Vehiculo: " << r.vehiculo.modelo;
+        });
         
         if (id_r != -1) {
             int res = ge.asignarRepartidor(id_e, id_r);
@@ -364,30 +363,76 @@ private:
     }
 
     void asignarRepartidor() {
-        int id_e, id_r;
-        std::cout << "ID Entrega: "; 
-        if (!(std::cin >> id_e)) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Inválido." << std::endl; return; }
-        std::cout << "ID Repartidor: "; 
-        if (!(std::cin >> id_r)) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Inválido." << std::endl; return; }
-        int res = ge.asignarRepartidor(id_e, id_r);
-        if (res != 0) mostrarError(-res);
-        else std::cout << "Repartidor asignado correctamente." << std::endl;
+        std::cout << "\n--- Seleccionar Entrega Pendiente ---" << std::endl;
+        int id_e = seleccionarElemento(ge.listarPorEstatus(EstatusEntrega::REPARTIDOR_PENDIENTE), [this](const Entrega& e) {
+            Cliente c = gc.buscarPorCedula(e.cedula_cliente);
+            Sector sO = gs.buscarPorId(e.id_sector_origen);
+            std::cout << "ID: " << e.id << " | Cliente: " << c.nombre << " | Origen: " << sO.nombre;
+        });
+        
+        if (id_e == -1) return;
+
+        // Necesitamos el sector de origen para filtrar repartidores
+        Entrega e = ge.buscarPorId(id_e);
+        std::vector<Repartidor> disponibles = gr.listarDisponiblesEnZona(e.id_sector_origen);
+        
+        if (disponibles.empty()) {
+            std::cout << "No hay repartidores disponibles en el sector de origen." << std::endl;
+            return;
+        }
+
+        std::cout << "\n--- Seleccionar Repartidor ---" << std::endl;
+        int id_r = seleccionarElemento(disponibles, [](const Repartidor& r) {
+            std::cout << "Nombre: " << r.nombre << " | Vehiculo: " << r.vehiculo.modelo;
+        });
+        
+        if (id_r != -1) {
+            int res = ge.asignarRepartidor(id_e, id_r);
+            if (res != 0) mostrarError(-res);
+            else std::cout << "Repartidor asignado correctamente." << std::endl;
+        }
     }
 
     void marcarFinalizada() {
-        int id_e;
-        std::cout << "ID Entrega: "; 
-        if (!(std::cin >> id_e)) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Inválido." << std::endl; return; }
-        ge.marcarEntregada(id_e);
-        std::cout << "Entrega marcada como finalizada." << std::endl;
+        std::cout << "\n--- Seleccionar Entrega para Finalizar ---" << std::endl;
+        int id_e = seleccionarElemento(ge.listarFinalizables(), [this](const Entrega& e) {
+            Cliente c = gc.buscarPorCedula(e.cedula_cliente);
+            Sector sO = gs.buscarPorId(e.id_sector_origen);
+            Sector sD = gs.buscarPorId(e.id_sector_destino);
+            
+            std::cout << "Cliente: " << c.nombre << " | Origen: " << sO.nombre << " | Destino: " << sD.nombre;
+            if (e.id_repartidor != -1) {
+                Repartidor r = gr.buscarPorId(e.id_repartidor);
+                std::cout << " | Repartidor: " << r.nombre;
+            } else {
+                std::cout << " | Repartidor: [PENDIENTE]";
+            }
+        });
+        if (id_e != -1) {
+            ge.marcarEntregada(id_e);
+            std::cout << "Entrega marcada como finalizada." << std::endl;
+        }
     }
 
     void cancelarEntrega() {
-        int id_e;
-        std::cout << "ID Entrega: "; 
-        if (!(std::cin >> id_e)) { std::cin.clear(); std::cin.ignore(1000, '\n'); std::cout << "Inválido." << std::endl; return; }
-        ge.cancelar(id_e);
-        std::cout << "Entrega cancelada." << std::endl;
+        std::cout << "\n--- Seleccionar Entrega para Cancelar ---" << std::endl;
+        int id_e = seleccionarElemento(ge.listarCancelables(), [this](const Entrega& e) {
+            Cliente c = gc.buscarPorCedula(e.cedula_cliente);
+            Sector sO = gs.buscarPorId(e.id_sector_origen);
+            Sector sD = gs.buscarPorId(e.id_sector_destino);
+            
+            std::cout << "Cliente: " << c.nombre << " | Origen: " << sO.nombre << " | Destino: " << sD.nombre;
+            if (e.id_repartidor != -1) {
+                Repartidor r = gr.buscarPorId(e.id_repartidor);
+                std::cout << " | Repartidor: " << r.nombre;
+            } else {
+                std::cout << " | Repartidor: [PENDIENTE]";
+            }
+        });
+        if (id_e != -1) {
+            ge.cancelar(id_e);
+            std::cout << "Entrega cancelada." << std::endl;
+        }
     }
 
     void registrarCliente() {
@@ -430,13 +475,12 @@ public:
             std::cout << "1. Gestión (CRUD)" << std::endl;
             std::cout << "2. Servicio Diario (Delivery)" << std::endl;
             std::cout << "0. Salir" << std::endl;
-        // En la entrada de menú principal:
-        if (!(std::cin >> opcion)) {
-            std::cin.clear(); std::cin.ignore(1000, '\n'); 
-            std::cout << "Entrada inválida." << std::endl; opcion = -1;
-        }
-
-// (Applying this logic to all cin points in Menu.h)
+            
+            if (!(std::cin >> opcion)) {
+                std::cin.clear(); std::cin.ignore(1000, '\n'); 
+                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                continue;
+            }
 
             switch (opcion) {
                 case 1: mostrarSubmenuGestion(); break;
