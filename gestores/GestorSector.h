@@ -4,16 +4,30 @@
 #include "../DaoArchivo.cpp"
 #include "../Modelos.h"
 #include <vector>
+#include <set>
 
 class GestorSector {
 private:
     DaoArchivo<Sector> dao;
+    inline static std::set<std::string> indiceNombresUnicos;
+    inline static bool estaCargado = false;
+
+    void cargarIndiceNombresUnicos() {
+        if (!estaCargado) {
+            for (const Sector& sector : listarActivos()) {
+                indiceNombresUnicos.insert(sector.nombre);
+            }
+        }
+    }
 
 public:
     GestorSector() : dao("sectores.dat") {}
 
     int registrar(Sector& s) {
-        return dao.crear(s);
+        if (indiceNombresUnicos.count(s.nombre)) { return -ERROR_UNICIDAD;}
+        const int id =  dao.crear(s);
+        if (id >= 0) { indiceNombresUnicos.insert(s.nombre);}
+        return id;
     }
 
     Sector buscarPorId(int id) {
