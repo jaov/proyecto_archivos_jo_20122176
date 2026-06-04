@@ -25,7 +25,37 @@ public:
         return dao.listarPorCampo(offsetof(Entrega, borrado_en), static_cast<time_t>(0));
     }
 
-    void eliminar(const int id) {
+    std::vector<Entrega> listarTodo() {
+        return dao.listarPorCampo(offsetof(Entrega, borrado_en), static_cast<time_t>(0));
+    }
+
+    std::vector<Entrega> listarPorEstatus(EstatusEntrega estatus) {
+        return dao.listarPorCampo(offsetof(Entrega, estatus), estatus);
+    }
+
+    std::vector<Entrega> listarCancelables() {
+        std::vector<Entrega> activas = listarActivas();
+        std::vector<Entrega> result;
+        for (const auto& e : activas) {
+            if (e.estatus != EstatusEntrega::ENTREGADA && e.estatus != EstatusEntrega::CANCELADO) {
+                result.push_back(e);
+            }
+        }
+        return result;
+    }
+
+    std::vector<Entrega> listarFinalizables() {
+        std::vector<Entrega> activas = listarActivas();
+        std::vector<Entrega> result;
+        for (const auto& e : activas) {
+            if (e.estatus == EstatusEntrega::REPARTIDOR_ASIGNADO) {
+                result.push_back(e);
+            }
+        }
+        return result;
+    }
+
+    void eliminar(int id) {
         dao.eliminar(id);
     }
 
