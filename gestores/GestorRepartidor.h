@@ -1,6 +1,8 @@
 #ifndef GESTOR_REPARTIDOR_H
 #define GESTOR_REPARTIDOR_H
 
+#include <set>
+
 #include "../DaoArchivo.cpp"
 #include "../Modelos.h"
 #include "../validadores/Validadores.h"
@@ -9,11 +11,26 @@
 class GestorRepartidor {
 private:
     DaoArchivo<Repartidor> dao;
+    inline static bool indicesEstanCargados = false;
+    inline static std::set<Cedula> indiceCedulasUnicas;
+    inline static std::set<std::string> indicePlacasUnicas; // la data es char[7], pero el indice en memoria puede tener string
+
+    void cargarIndices() {
+        for (const Repartidor r : listarActivos()) {
+            indiceCedulasUnicas.insert(r.cedula);
+            indicePlacasUnicas.insert(r.vehiculo.placa);
+        }
+    }
 
 public:
-    GestorRepartidor() : dao("repartidores.dat") {}
+    GestorRepartidor() : dao("repartidores.dat") {
+        if (!indicesEstanCargados) {
+            cargarIndices();
+            indicesEstanCargados = true;
+        }
+    }
 
-    Repartidor buscarPorId(int id) {
+    Repartidor buscarPorId(const int id) {
         return dao.encontrarPorId(id);
     }
 
@@ -21,10 +38,26 @@ public:
         if (!Validadores::esVehiculoValido(r.vehiculo)) {
             return -ERROR_VALIDACION;
         }
-        return dao.crear(r);
+
+        // Integridad: Cedula única
+        if (indiceCedulasUnicas.count(r.cedula)) {
+            return -ERROR_UNICIDAD;
+        }
+
+        // Integridad: Placa única
+        if (indicePlacasUnicas.count(r.vehiculo.placa)) {
+            return -ERROR_UNICIDAD;
+        }
+
+        const int id =  dao.crear(r);
+        if (id >= 0) {
+            indiceCedulasUnicas.insert(r.cedula);
+            indicePlacasUnicas.insert(r.vehiculo.placa);
+        }
+        return id;
     }
 
-    void actualizarSector(int id, int nuevoIdSector) {
+    void actualizarSector(const int id, const int nuevoIdSector) {
         dao.actualizarCampo(id, offsetof(Repartidor, id_sector), nuevoIdSector);
     }
 

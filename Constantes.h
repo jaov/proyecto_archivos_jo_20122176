@@ -31,6 +31,7 @@ enum Resultado : int {
     ERROR_VALIDACION = 2,
     REPARTIDOR_OCUPADO = 3,
     ESTADO_ILEGAL = 4,
+    ERROR_UNICIDAD = 5,
     ERROR_IO = 10
 };
 

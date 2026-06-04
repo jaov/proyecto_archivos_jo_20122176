@@ -8,6 +8,11 @@
 struct Telefono{
     OpTelfMovil prefijo;
     unsigned int numero;
+
+    bool operator<(const Telefono& otro) const {
+        if (prefijo != otro.prefijo) return prefijo < otro.prefijo;
+        return numero < otro.numero;
+    }
 };
 
 struct Vehiculo{
@@ -19,6 +24,12 @@ struct Vehiculo{
 struct Cedula{
     TipoIdentificacion tipIdent;
     long numero;
+
+    // para usarlo en sets
+    bool operator<(const Cedula& otro) const {
+        if (tipIdent != otro.tipIdent) return tipIdent < otro.tipIdent;
+        return numero < otro.numero;
+    }
 };
 
 

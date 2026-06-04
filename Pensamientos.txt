@@ -22,4 +22,6 @@ Se manejarán borrados suaves (soft deletes), para no mover el indice de los arc
 
 Para los aleatorios quería usar PCG https://www.pcg-random.org porque es genial, pero decidí no incluir librerías externas.
 
-Consideré mantener índices únicos en un set o map, pero mantenerlos sincronizados iba a ser difícil.
+Para asegurarme de unicidad quería depender sólo del archivo, pero para eso tenía que hacer muchas llamadas cómo
+`!dao.listarPorCampo(offsetof(Cliente, cedula.numero), c.cedula.numero).empty()` por cada campo que quería que fuera único.
+Se uso set para validacion
