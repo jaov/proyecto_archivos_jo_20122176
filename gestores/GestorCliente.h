@@ -58,8 +58,21 @@ public:
         return dao.encontrarPorId(id);
     }
 
+    int encontrarIdPorCedula(const TipoIdentificacion tipo, const long numero) {
+        Cedula c = {tipo, numero};
+        std::vector<Cliente> resultados = dao.listarPorCampo(offsetof(Cliente, cedula), c);
+        if (resultados.empty()) return -ENTIDAD_NO_ENCONTRADA;
+        return resultados[0].id;
+    }
+
+    Cliente buscarPorCedula(Cedula c) {
+        std::vector<Cliente> resultados = dao.listarPorCampo(offsetof(Cliente, cedula), c);
+        if (resultados.empty()) return {-1, {TipoIdentificacion::NATURAL, 0}, "No encontrado", {OpTelfMovil::MOVISTAR_1, 0}, 1};
+        return resultados[0];
+    }
+
     // (Soft-delete)
-    void eliminar(int id) {
+    void eliminar(const int id) {
         dao.eliminar(id);
     }
 };
