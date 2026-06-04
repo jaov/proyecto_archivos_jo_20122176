@@ -38,9 +38,14 @@ public:
     }
 
     int asignarRepartidor(const int id_entrega, const int id_repartidor) {
-        if (!GestorRepartidor().estaDisponible(id_repartidor)) return 1;
+	    GestorRepartidor gRep = GestorRepartidor();
+        Entrega entrega = buscarPorId(id_entrega);
+        if (!gRep.estaDisponible(id_repartidor)) return 1;
+        if (entrega.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) { return 2;}
         dao.actualizarCampo(id_entrega, offsetof(Entrega, id_repartidor), id_repartidor);
         dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::REPARTIDOR_ASIGNADO);
+	    gRep.actualizarDisponible(id_repartidor, false);
+    
         return 0;
     }
 
