@@ -28,7 +28,7 @@ public:
         dao.actualizarCampo(id, offsetof(Repartidor, id_sector), nuevoIdSector);
     }
 
-    void actualizarEstado(int id, bool disponible) {
+    void actualizarDisponible(int id, bool disponible) {
         dao.actualizarCampo(id, offsetof(Repartidor, disponible), disponible);
     }
 
