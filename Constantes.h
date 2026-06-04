@@ -25,6 +25,15 @@ enum class EstatusEntrega : int {
     CANCELADO = 3
 };
 
+enum Resultado : int {
+    EXITO = 0,
+    ENTIDAD_NO_ENCONTRADA = 1,
+    ERROR_VALIDACION = 2,
+    REPARTIDOR_OCUPADO = 3,
+    ESTADO_ILEGAL = 4,
+    ERROR_IO = 10
+};
+
 enum TipoVehiculo {
     MOTO,
     CARRO
