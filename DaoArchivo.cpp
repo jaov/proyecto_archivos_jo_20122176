@@ -8,6 +8,7 @@
 #include <ctime>
 #include <cstring>
 #include <string>
+#include "Constantes.h"
 
 template <typename T>
 class DaoArchivo {
@@ -27,6 +28,9 @@ class DaoArchivo {
 	    file.clear();
 	    file.open(nombreArchivo, std::ios::binary | std::ios::out | std::ios::app);
 	 }
+	 
+	 if(!file.is_open()) return -ERROR_IO;
+
 	 // Voy hasta el final de archivo
 	 file.seekp(0, std::ios::end);
 
@@ -37,6 +41,12 @@ class DaoArchivo {
 	 // lo uso para dar valor
 	 item.id = nuevoId;
          file.write(reinterpret_cast<const char*>(&item), sizeof(T));
+	 
+	 if (!file.good()) {
+		 file.close();
+		 return -ERROR_IO;
+	 }
+
 	 file.close(); //muy importante
 
 	 return nuevoId;
@@ -60,7 +70,7 @@ class DaoArchivo {
 	 std::fstream file(nombreArchivo, std::ios::binary | std::ios::in |
 		 std::ios::out);
 
-	 if(!file.is_open()) return 1;
+	 if(!file.is_open()) return -ERROR_IO;
 
 	 // Calcular posicion
 	 // id*sizeof(T) me da la "fila"
@@ -74,9 +84,14 @@ class DaoArchivo {
 	 // uso el tamaño del campo
 	 file.write(reinterpret_cast<const char*>(&nuevoValor), sizeof(C));
 
+	 if (!file.good()) {
+		 file.close();
+		 return -ERROR_IO;
+	 }
+
 	 file.close();
 
-	 return 0;
+	 return EXITO;
      }
 
      // no funciona con char[] por el comparador ==
@@ -141,8 +156,7 @@ class DaoArchivo {
 
     int eliminar(const int id) {
 	time_t ahora = std::time(nullptr);
-	actualizarCampo(id, offsetof(T, borrado_en), ahora);
-	return 0;
+	return actualizarCampo(id, offsetof(T, borrado_en), ahora);
     }
 };
 

@@ -31,7 +31,7 @@ public:
 
     int solicitarEnvio(Entrega& e) {
         if (e.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) {
-            return -1;
+            return -ESTADO_ILEGAL;
         }
         return dao.crear(e);
 
@@ -40,13 +40,13 @@ public:
     int asignarRepartidor(const int id_entrega, const int id_repartidor) {
 	    GestorRepartidor gRep = GestorRepartidor();
         Entrega entrega = buscarPorId(id_entrega);
-        if (!gRep.estaDisponible(id_repartidor)) return 1;
-        if (entrega.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) { return 2;}
+        if (!gRep.estaDisponible(id_repartidor)) return -REPARTIDOR_OCUPADO;
+        if (entrega.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) { return -ESTADO_ILEGAL;}
         dao.actualizarCampo(id_entrega, offsetof(Entrega, id_repartidor), id_repartidor);
         dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::REPARTIDOR_ASIGNADO);
 	    gRep.actualizarDisponible(id_repartidor, false);
     
-        return 0;
+        return EXITO;
     }
 
     int obtIdEntregaActiva(const int id_repartidor) {

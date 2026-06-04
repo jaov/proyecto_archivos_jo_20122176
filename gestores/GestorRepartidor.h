@@ -19,7 +19,7 @@ public:
 
     int registrar(Repartidor& r) {
         if (!Validadores::esVehiculoValido(r.vehiculo)) {
-            return -1;
+            return -ERROR_VALIDACION;
         }
         return dao.crear(r);
     }

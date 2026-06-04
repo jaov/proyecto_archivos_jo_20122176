@@ -15,7 +15,7 @@ public:
 
     int registrar(Cliente& c) {
         if (!Validadores::esCedulaValida(c.cedula) || !Validadores::esTelefonoValido(c.telefono)) {
-            return -1;
+            return -ERROR_VALIDACION;
         }
         return dao.crear(c);
     }
