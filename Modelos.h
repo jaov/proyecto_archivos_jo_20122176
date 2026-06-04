@@ -30,6 +30,10 @@ struct Cedula{
         if (tipIdent != otro.tipIdent) return tipIdent < otro.tipIdent;
         return numero < otro.numero;
     }
+
+    bool operator==(const Cedula& otro) const {
+        return tipIdent == otro.tipIdent && numero == otro.numero;
+    }
 };
 
 
