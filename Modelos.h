@@ -49,8 +49,6 @@ struct Repartidor {
     int id;
     Cedula cedula;
     char nombre[64];
-    char usuario[32];
-    char contrasena[32];
     int id_sector; // llave foranea
     Vehiculo vehiculo;
     bool disponible;
