@@ -3,12 +3,60 @@
 
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
+#include <limits>
 #include "gestores/GestorCliente.h"
 #include "gestores/GestorRepartidor.h"
 #include "gestores/GestorSector.h"
 #include "gestores/GestorEntrega.h"
 #include "gestores/GestorServicioDiario.h"
 #include "Semillero.h"
+
+// Se ve feo, pero me deja mostrar paginado en el terminal
+template <typename T, typename Func>
+int seleccionarElemento(const std::vector<T>& items, Func displayFunc) {
+    if (items.empty()) {
+        std::cout << "No hay elementos disponibles." << std::endl;
+        return -1;
+    }
+
+    int page = 0;
+    const int pageSize = 9;
+    
+    while (true) {
+        size_t start = page * pageSize;
+        size_t end = std::min(start + pageSize, items.size());
+        
+        std::cout << "\n--- Seleccione (1-" << (end - start) << "), [A]nt, [S]ig, [0] Salir ---" << std::endl;
+        for (size_t i = start; i < end; ++i) {
+            std::cout << (i - start + 1) << ". ";
+            displayFunc(items[i]);
+            std::cout << std::endl;
+        }
+
+        char opcion;
+        std::cin >> opcion;
+        opcion = std::toupper(opcion);
+        
+        if (opcion == '0') return -1;
+        else if (opcion == 'A') { if (page > 0) page--; }
+        else if (opcion == 'S') { if (end < items.size()) page++; }
+
+        // Selecciono una de las opciones
+        else if (opcion >= '1' && opcion <= '9') {
+            int index = (opcion - '1');
+
+            // Porque estamos paginando hay que mapear.
+            if (index >= 0 && index < static_cast<int>(end - start)) {
+                return items[start + index].id;
+            }
+            std::cout << "Opción inválida." << std::endl;
+        }
+        else {
+            std::cout << "Opción inválida." << std::endl;
+        }
+    }
+}
 
 class Menu {
 private:
