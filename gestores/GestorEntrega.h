@@ -62,6 +62,8 @@ public:
 
     void marcarEntregada(const int id_entrega) {
         dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::ENTREGADA);
+        int idRepartidor = dao.encontrarPorId(id_entrega).id_repartidor;
+        GestorRepartidor().actualizarDisponible(idRepartidor, true);
     }
 
     void cancelar(const int id_entrega) {
