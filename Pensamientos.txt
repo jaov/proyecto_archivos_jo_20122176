@@ -21,3 +21,5 @@ Para metodos que solo hacen efectos secundarios retornar 0 es bien y retornar >0
 Se manejarán borrados suaves (soft deletes), para no mover el indice de los archivos binarios
 
 Para los aleatorios quería usar PCG https://www.pcg-random.org porque es genial, pero decidí no incluir librerías externas.
+
+Consideré mantener índices únicos en un set o map, pero mantenerlos sincronizados iba a ser difícil.
