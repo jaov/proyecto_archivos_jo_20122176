@@ -9,7 +9,6 @@
 #include "gestores/GestorRepartidor.h"
 #include "gestores/GestorSector.h"
 #include "gestores/GestorEntrega.h"
-#include "gestores/GestorServicioDiario.h"
 #include "Semillero.h"
 
 // Se ve feo, pero me deja mostrar paginado en el terminal
@@ -306,8 +305,7 @@ private:
     }
 
     void iniciarJornada() {
-        GestorServicioDiario gsd;
-        gsd.asignarAleatorios();
+        gr.asignarTodosAleatoriamente();
         std::cout << "Jornada iniciada y repartidores distribuidos." << std::endl;
     }
 
