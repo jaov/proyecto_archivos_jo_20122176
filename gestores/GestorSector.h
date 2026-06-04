@@ -34,6 +34,12 @@ public:
         return dao.encontrarPorId(id);
     }
 
+    int encontrarIdPorNombre(const char* nombre) {
+        std::vector<Sector> resultados = dao.listarPorString(offsetof(Sector, nombre), nombre, 32);
+        if (resultados.empty()) return -ENTIDAD_NO_ENCONTRADA;
+        return resultados[0].id;
+    }
+
     std::vector<Sector> listarActivos() {
         return dao.listarPorCampo(offsetof(Sector, borrado_en), static_cast<time_t>(0));
     }
