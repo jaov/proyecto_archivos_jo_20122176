@@ -1,0 +1,5 @@
+*.gch
+*.o
+*.exe
+*.dat
+build/
