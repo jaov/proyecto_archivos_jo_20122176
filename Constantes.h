@@ -1,7 +1,7 @@
 #ifndef CONSTANTES_H
 #define CONSTANTES_H
 
-enum class OpTelfMovil: unsigned short {
+enum OpTelfMovil {
     MOVISTAR_1 = 414,
     MOVISTAR_2 = 424,
     DIGITEL_1 = 412,
@@ -10,7 +10,7 @@ enum class OpTelfMovil: unsigned short {
     MOVILNET_2 = 426
 };
 
-enum class TipoIdentificacion: char {
+enum TipoIdentificacion {
     NATURAL = 'V',
     EXTRANJERO = 'E',
     GUBERNAMENTAL = 'G',
@@ -18,7 +18,7 @@ enum class TipoIdentificacion: char {
     JURIDICA = 'J'
 };
 
-enum class EstatusEntrega : int {
+enum EstatusEntrega {
     REPARTIDOR_PENDIENTE = 0,
     REPARTIDOR_ASIGNADO = 1,
     ENTREGADA = 2,

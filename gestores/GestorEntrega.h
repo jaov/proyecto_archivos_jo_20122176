@@ -36,9 +36,9 @@ public:
     std::vector<Entrega> listarCancelables() {
         std::vector<Entrega> activas = listarActivas();
         std::vector<Entrega> result;
-        for (const auto& e : activas) {
-            if (e.estatus != EstatusEntrega::ENTREGADA && e.estatus != EstatusEntrega::CANCELADO) {
-                result.push_back(e);
+        for (std::vector<Entrega>::const_iterator it = activas.begin(); it != activas.end(); ++it) {
+            if (it->estatus != ENTREGADA && it->estatus != CANCELADO) {
+                result.push_back(*it);
             }
         }
         return result;
@@ -47,9 +47,9 @@ public:
     std::vector<Entrega> listarFinalizables() {
         std::vector<Entrega> activas = listarActivas();
         std::vector<Entrega> result;
-        for (const auto& e : activas) {
-            if (e.estatus == EstatusEntrega::REPARTIDOR_ASIGNADO) {
-                result.push_back(e);
+        for (std::vector<Entrega>::const_iterator it = activas.begin(); it != activas.end(); ++it) {
+            if (it->estatus == REPARTIDOR_ASIGNADO) {
+                result.push_back(*it);
             }
         }
         return result;
@@ -60,7 +60,7 @@ public:
     }
 
     int solicitarEnvio(Entrega& e) {
-        if (e.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) {
+        if (e.estatus != REPARTIDOR_PENDIENTE) {
             return -ESTADO_ILEGAL;
         }
         return dao.crear(e);
@@ -71,9 +71,9 @@ public:
 	    GestorRepartidor gRep = GestorRepartidor();
         Entrega entrega = buscarPorId(id_entrega);
         if (!gRep.estaDisponible(id_repartidor)) return -REPARTIDOR_OCUPADO;
-        if (entrega.estatus != EstatusEntrega::REPARTIDOR_PENDIENTE) { return -ESTADO_ILEGAL;}
+        if (entrega.estatus != REPARTIDOR_PENDIENTE) { return -ESTADO_ILEGAL;}
         dao.actualizarCampo(id_entrega, offsetof(Entrega, id_repartidor), id_repartidor);
-        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::REPARTIDOR_ASIGNADO);
+        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), REPARTIDOR_ASIGNADO);
 	    gRep.actualizarDisponible(id_repartidor, false);
     
         return EXITO;
@@ -81,9 +81,9 @@ public:
 
     int obtIdEntregaActiva(const int id_repartidor) {
         std::vector<Entrega> entregasRepartidor = dao.listarPorCampo(offsetof(Entrega, id_repartidor), id_repartidor);
-        for (Entrega e : entregasRepartidor) {
-            if (e.estatus == EstatusEntrega::REPARTIDOR_ASIGNADO) {
-                return e.id;
+        for (std::vector<Entrega>::const_iterator it = entregasRepartidor.begin(); it != entregasRepartidor.end(); ++it) {
+            if (it->estatus == REPARTIDOR_ASIGNADO) {
+                return it->id;
             }
         }
 
@@ -91,13 +91,13 @@ public:
     }
 
     void marcarEntregada(const int id_entrega) {
-        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::ENTREGADA);
+        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), ENTREGADA);
         int idRepartidor = dao.encontrarPorId(id_entrega).id_repartidor;
         GestorRepartidor().actualizarDisponible(idRepartidor, true);
     }
 
     void cancelar(const int id_entrega) {
-        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), EstatusEntrega::CANCELADO);
+        dao.actualizarCampo(id_entrega, offsetof(Entrega, estatus), CANCELADO);
     }
 
     void marcarEntregadaConRepartidor(const int id_repartidor) {

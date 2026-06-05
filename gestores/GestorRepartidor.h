@@ -11,9 +11,9 @@
 class GestorRepartidor {
 private:
     DaoArchivo<Repartidor> dao;
-    inline static bool indicesEstanCargados = false;
-    inline static std::set<Cedula> indiceCedulasUnicas;
-    inline static std::set<std::string> indicePlacasUnicas; // la data es char[7], pero el indice en memoria puede tener string
+    static bool indicesEstanCargados;
+    static std::set<Cedula> indiceCedulasUnicas;
+    static std::set<std::string> indicePlacasUnicas;
 
     void cargarIndices() {
         for (const Repartidor r : listarActivos()) {
@@ -39,12 +39,12 @@ public:
             return -ERROR_VALIDACION;
         }
 
-        // Integridad: Cedula única
+        // Integridad: Cedula unica
         if (indiceCedulasUnicas.count(r.cedula)) {
             return -ERROR_UNICIDAD;
         }
 
-        // Integridad: Placa única
+        // Integridad: Placa unica
         if (indicePlacasUnicas.count(r.vehiculo.placa)) {
             return -ERROR_UNICIDAD;
         }

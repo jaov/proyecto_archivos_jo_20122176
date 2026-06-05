@@ -25,7 +25,8 @@ namespace Semillero {
         std::srand(std::time(nullptr));
 
         std::vector<int> sectorIds;
-        for (const char* nombre : Aleatorio::SECTORES) {
+        for (int i = 0; i < 8; ++i) {
+            const char* nombre = Aleatorio::SECTORES[i];
             Sector s = {0, "", 0};
             std::strncpy(s.nombre, nombre, 32);
             int res = gs.registrar(s);
@@ -35,7 +36,7 @@ namespace Semillero {
 
         int clientesCreados = 0;
         for (int i = 0; i < 10; ++i) {
-            Cedula ced = { TipoIdentificacion::NATURAL, 10000000 + std::rand() % 20000000 };
+            Cedula ced = { NATURAL, 10000000 + std::rand() % 20000000 };
             OpTelfMovil prefijos[] = {OpTelfMovil::MOVISTAR_1, OpTelfMovil::MOVISTAR_2, OpTelfMovil::DIGITEL_1, OpTelfMovil::DIGITEL_2, OpTelfMovil::MOVILNET_1, OpTelfMovil::MOVILNET_2};
             Telefono tel = { prefijos[std::rand() % 6], (unsigned int)(1000000 + std::rand() % 9000000) };
             
@@ -53,7 +54,7 @@ namespace Semillero {
             std::strncpy(v.modelo, (v.tipo == MOTO) ? Aleatorio::MODELOS_MOTO[std::rand() % 4] : Aleatorio::MODELOS_CARRO[std::rand() % 4], 50);
             Aleatorio::generarPlaca(v.placa);
 
-            Cedula ced = { TipoIdentificacion::NATURAL, 30000000 + std::rand() % 10000000 };
+            Cedula ced = { NATURAL, 30000000 + std::rand() % 10000000 };
             Repartidor r = {0, ced, "", sectorIds[std::rand() % sectorIds.size()], v, true, 0};
             
             std::snprintf(r.nombre, 64, "%s %s", Aleatorio::NOMBRES[std::rand() % 8], Aleatorio::APELLIDOS[std::rand() % 7]);

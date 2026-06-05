@@ -49,10 +49,10 @@ int seleccionarElemento(const std::vector<T>& items, Func displayFunc) {
             if (index >= 0 && index < static_cast<int>(end - start)) {
                 return items[start + index].id;
             }
-            std::cout << "Opción inválida." << std::endl;
+            std::cout << "Opcion invalida." << std::endl;
         }
         else {
-            std::cout << "Opción inválida." << std::endl;
+            std::cout << "Opcion invalida." << std::endl;
         }
     }
 }
@@ -68,7 +68,7 @@ private:
         std::cout << " [!] Error: ";
         switch (static_cast<Resultado>(-codigo)) {
             case ENTIDAD_NO_ENCONTRADA: std::cout << "Entidad no encontrada."; break;
-            case ERROR_VALIDACION:      std::cout << "Datos inválidos."; break;
+            case ERROR_VALIDACION:      std::cout << "Datos invalidos."; break;
             case REPARTIDOR_OCUPADO:    std::cout << "Repartidor ocupado."; break;
             case ESTADO_ILEGAL:         std::cout << "Estado ilegal."; break;
             case ERROR_UNICIDAD:        std::cout << "Duplicado detectado (Cedula/Placa)."; break;
@@ -81,14 +81,14 @@ private:
     void mostrarSubmenuGestion() {
         int opcion;
         do {
-            std::cout << "\n--- Gestión (CRUD) ---" << std::endl;
+            std::cout << "\n--- Gestion (CRUD) ---" << std::endl;
             std::cout << "1. Clientes" << std::endl;
             std::cout << "2. Repartidores" << std::endl;
             std::cout << "3. Sectores" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
 
@@ -97,7 +97,7 @@ private:
                 case 2: mostrarSubmenuRepartidores(); break;
                 case 3: mostrarSubmenuSectores(); break;
                 case 0: break;
-                default: std::cout << "Opción inválida." << std::endl;
+                default: std::cout << "Opcion invalida." << std::endl;
             }
         } while (opcion != 0);
     }
@@ -105,14 +105,14 @@ private:
     void mostrarSubmenuClientes() {
         int opcion;
         do {
-            std::cout << "\n--- Gestión de Clientes ---" << std::endl;
+            std::cout << "\n--- Gestion de Clientes ---" << std::endl;
             std::cout << "1. Registrar" << std::endl;
             std::cout << "2. Listar" << std::endl;
             std::cout << "3. Eliminar" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
             switch(opcion) {
@@ -149,14 +149,14 @@ private:
     void mostrarSubmenuRepartidores() {
         int opcion;
         do {
-            std::cout << "\n--- Gestión de Repartidores ---" << std::endl;
+            std::cout << "\n--- Gestion de Repartidores ---" << std::endl;
             std::cout << "1. Registrar" << std::endl;
             std::cout << "2. Listar" << std::endl;
             std::cout << "3. Eliminar" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
             switch(opcion) {
@@ -206,14 +206,14 @@ private:
     void mostrarSubmenuSectores() {
         int opcion;
         do {
-            std::cout << "\n--- Gestión de Sectores ---" << std::endl;
+            std::cout << "\n--- Gestion de Sectores ---" << std::endl;
             std::cout << "1. Registrar" << std::endl;
             std::cout << "2. Listar" << std::endl;
             std::cout << "3. Eliminar" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(1000, '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
             switch(opcion) {
@@ -252,18 +252,18 @@ private:
     void mostrarSubmenuServicioDiario() {
         int opcion;
         do {
-            std::cout << "\n--- Submenú de Servicio Diario ---" << std::endl;
+            std::cout << "\n--- Submenu de Servicio Diario ---" << std::endl;
             std::cout << "1. Iniciar Jornada (Randomizar Repartidores)" << std::endl;
-            std::cout << "2. Solicitar Envío" << std::endl;
-            std::cout << "3. Asignar Repartidor a Envío" << std::endl;
+            std::cout << "2. Solicitar Envio" << std::endl;
+            std::cout << "3. Asignar Repartidor a Envio" << std::endl;
             std::cout << "4. Marcar Entrega como Finalizada" << std::endl;
-            std::cout << "5. Cancelar Envío" << std::endl;
-            std::cout << "6. Listar Envíos" << std::endl;
-            std::cout << "7. Listar Envíos Pendientes" << std::endl;
+            std::cout << "5. Cancelar Envio" << std::endl;
+            std::cout << "6. Listar Envios" << std::endl;
+            std::cout << "7. Listar Envios Pendientes" << std::endl;
             std::cout << "0. Volver" << std::endl;
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(1000, '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
 
@@ -276,14 +276,14 @@ private:
                 case 6: listarEnvios(false); break;
                 case 7: listarEnvios(true); break;
                 case 0: break;
-                default: std::cout << "Opción inválida." << std::endl;
+                default: std::cout << "Opcion invalida." << std::endl;
             }
         } while (opcion != 0);
     }
 
     void listarEnvios(bool soloPendientes) {
-        std::vector<Entrega> lista = soloPendientes ? ge.listarPorEstatus(EstatusEntrega::REPARTIDOR_PENDIENTE) : ge.listarTodo();
-        std::cout << "\n--- Envíos ---" << std::endl;
+        std::vector<Entrega> lista = soloPendientes ? ge.listarPorEstatus(REPARTIDOR_PENDIENTE) : ge.listarTodo();
+        std::cout << "\n--- Envios ---" << std::endl;
         for (const auto& e : lista) {
             Cliente c = gc.buscarPorCedula(e.cedula_cliente);
             Sector sO = gs.buscarPorId(e.id_sector_origen);
@@ -335,16 +335,16 @@ private:
         e.cedula_cliente = c.cedula; 
         e.id_sector_origen = id_origen; 
         e.id_sector_destino = id_destino; 
-        e.estatus = EstatusEntrega::REPARTIDOR_PENDIENTE; 
+        e.estatus = REPARTIDOR_PENDIENTE; 
         e.id_repartidor = -1; 
         e.borrado_en = 0; 
         
         int id_e = ge.solicitarEnvio(e);
         if (id_e < 0) { mostrarError(id_e); return; }
-        std::cout << "Envío solicitado con ID: " << id_e << std::endl;
+        std::cout << "Envio solicitado con ID: " << id_e << std::endl;
 
         if (disponibles.empty()) {
-            std::cout << "Disculpe, no hay repartidores disponibles. El envío queda pendiente." << std::endl;
+            std::cout << "Disculpe, no hay repartidores disponibles. El envio queda pendiente." << std::endl;
             return;
         }
 
@@ -362,7 +362,7 @@ private:
 
     void asignarRepartidor() {
         std::cout << "\n--- Seleccionar Entrega Pendiente ---" << std::endl;
-        int id_e = seleccionarElemento(ge.listarPorEstatus(EstatusEntrega::REPARTIDOR_PENDIENTE), [this](const Entrega& e) {
+        int id_e = seleccionarElemento(ge.listarPorEstatus(REPARTIDOR_PENDIENTE), [this](const Entrega& e) {
             Cliente c = gc.buscarPorCedula(e.cedula_cliente);
             Sector sO = gs.buscarPorId(e.id_sector_origen);
             std::cout << "ID: " << e.id << " | Cliente: " << c.nombre << " | Origen: " << sO.nombre;
@@ -435,11 +435,11 @@ private:
 
     void registrarCliente() {
         Cliente c;
-        std::cout << "Cédula (Tipo [V,E,G,C,J] número): ";
+        std::cout << "Cedula (Tipo [V,E,G,C,J] numero): ";
         char tipo; long num;
         if (!(std::cin >> tipo >> num)) {
             std::cin.clear(); std::cin.ignore(1000, '\n');
-            std::cout << "Entrada inválida." << std::endl; return;
+            std::cout << "Entrada invalida." << std::endl; return;
         }
         c.cedula = {static_cast<TipoIdentificacion>(tipo), num};
         
@@ -447,11 +447,11 @@ private:
         std::cin.ignore();
         std::cin.getline(c.nombre, 64);
         
-        std::cout << "Teléfono (Prefijo número): ";
+        std::cout << "Telefono (Prefijo numero): ";
         int pref; unsigned int numTel;
         if (!(std::cin >> pref >> numTel)) {
             std::cin.clear(); std::cin.ignore(1000, '\n');
-            std::cout << "Entrada inválida." << std::endl; return;
+            std::cout << "Entrada invalida." << std::endl; return;
         }
         c.telefono = {static_cast<OpTelfMovil>(pref), numTel};
         c.borrado_en = 0;
@@ -470,13 +470,13 @@ public:
         int opcion;
         do {
             std::cout << "\n--- SpeedDelivery Main Menu ---" << std::endl;
-            std::cout << "1. Gestión (CRUD)" << std::endl;
+            std::cout << "1. Gestion (CRUD)" << std::endl;
             std::cout << "2. Servicio Diario (Delivery)" << std::endl;
             std::cout << "0. Salir" << std::endl;
             
             if (!(std::cin >> opcion)) {
                 std::cin.clear(); std::cin.ignore(1000, '\n'); 
-                std::cout << "Entrada inválida." << std::endl; opcion = -1;
+                std::cout << "Entrada invalida." << std::endl; opcion = -1;
                 continue;
             }
 
@@ -484,7 +484,7 @@ public:
                 case 1: mostrarSubmenuGestion(); break;
                 case 2: mostrarSubmenuServicioDiario(); break;
                 case 0: std::cout << "Saliendo..." << std::endl; break;
-                default: std::cout << "Opción inválida." << std::endl;
+                default: std::cout << "Opcion invalida." << std::endl;
             }
         } while (opcion != 0);
     }

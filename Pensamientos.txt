@@ -12,16 +12,16 @@ pointer += 100;
 One CPU instruction. Faaaaaaaaaast."
 Joel Spolsky - https://www.joelonsoftware.com/2001/12/11/back-to-basics/
 
-Para la capa de persistencia me inspiré en Joel Spolsky, una de mis grandes influencias de programador.
+Para la capa de persistencia me inspire en Joel Spolsky, una de mis grandes influencias de programador.
 
-Se va a guardar en archivos .dat con campos de tamaño fijo, así que no se va a usar std::string y se optará por arrays de char
+Se va a guardar en archivos .dat con campos de tamano fijo, asi que no se va a usar std::string y se optara por arrays de char
 
 Para metodos que solo hacen efectos secundarios retornar 0 es bien y retornar >0 se usa para errores
 
-Se manejarán borrados suaves (soft deletes), para no mover el indice de los archivos binarios
+Se manejaran borrados suaves (soft deletes), para no mover el indice de los archivos binarios
 
-Para los aleatorios quería usar PCG https://www.pcg-random.org porque es genial, pero decidí no incluir librerías externas.
+Para los aleatorios queria usar PCG https://www.pcg-random.org porque es genial, pero decidi no incluir librerias externas.
 
-Para asegurarme de unicidad quería depender sólo del archivo, pero para eso tenía que hacer muchas llamadas cómo
-`!dao.listarPorCampo(offsetof(Cliente, cedula.numero), c.cedula.numero).empty()` por cada campo que quería que fuera único.
+Para asegurarme de unicidad queria depender solo del archivo, pero para eso tenia que hacer muchas llamadas como
+`!dao.listarPorCampo(offsetof(Cliente, cedula.numero), c.cedula.numero).empty()` por cada campo que queria que fuera unico.
 Se uso set para validacion

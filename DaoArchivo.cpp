@@ -15,7 +15,7 @@ class DaoArchivo {
      std::string nombreArchivo;
      public:
 	 DaoArchivo(const std::string &na) : nombreArchivo(na) {
-	     static_assert(std::is_standard_layout_v<T>, "T debe ser standard");
+	     static_assert(std::is_standard_layout<T>::value, "T debe ser standard");
 	     static_assert(offsetof(T,id)>= 0, "T tiene que tener id");
 	     static_assert(offsetof(T,borrado_en)>= 0, "T tiene que tener borrado_en");
 	 }

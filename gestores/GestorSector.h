@@ -9,8 +9,8 @@
 class GestorSector {
 private:
     DaoArchivo<Sector> dao;
-    inline static std::set<std::string> indiceNombresUnicos;
-    inline static bool estaCargado = false;
+    static std::set<std::string> indiceNombresUnicos;
+    static bool estaCargado;
 
     void cargarIndiceNombresUnicos() {
         if (!estaCargado) {

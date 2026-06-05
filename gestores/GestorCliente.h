@@ -12,9 +12,9 @@ private:
     DaoArchivo<Cliente> dao;
 
     // Los clientes son unicos por cedula y telefono
-    inline static std::set<Cedula> indiceCedulasUnicas;
-    inline static std::set<Telefono> indiceTelefonoUnicos;
-    inline static bool indicesCargados = false;
+    static std::set<Cedula> indiceCedulasUnicas;
+    static std::set<Telefono> indiceTelefonoUnicos;
+    static bool indicesCargados;
 
     void cargarIndices() {
         for (const auto& c : listarActivos()) {
@@ -36,7 +36,7 @@ public:
             return -ERROR_VALIDACION;
         }
 
-        // Integridad: Cedula única en memoria
+        // Integridad: Cedula unica en memoria
         if (indiceCedulasUnicas.count(c.cedula)) {
             return -ERROR_UNICIDAD;
         }
@@ -67,7 +67,17 @@ public:
 
     Cliente buscarPorCedula(Cedula c) {
         std::vector<Cliente> resultados = dao.listarPorCampo(offsetof(Cliente, cedula), c);
-        if (resultados.empty()) return {-1, {TipoIdentificacion::NATURAL, 0}, "No encontrado", {OpTelfMovil::MOVISTAR_1, 0}, 1};
+        if (resultados.empty()) {
+            Cliente notFound;
+            notFound.id = -1;
+            notFound.cedula.tipIdent = NATURAL;
+            notFound.cedula.numero = 0;
+            std::strncpy(notFound.nombre, "No encontrado", 64);
+            notFound.telefono.prefijo = MOVISTAR_1;
+            notFound.telefono.numero = 0;
+            notFound.borrado_en = 1;
+            return notFound;
+        }
         return resultados[0];
     }
 
